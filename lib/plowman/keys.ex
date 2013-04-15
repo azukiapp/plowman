@@ -1,12 +1,4 @@
 defmodule Plowman.Keys do
-  @api_key   "ec1a8eb9-18a6-42c2-81ec-c0f0f615280c"
-  @api_host  "https://10.10.10.100:5000"
-  @api_entry "/internal/lookupUserByPublicKey?fingerprint="
-
-  #def host_key(algorithm, daemonOptions) do
-    #host_key(algorithm, daemonOptions, :ssh_file)
-  #end
-
   def host_key(algorithm, daemonOptions) do
     :ssh_file.host_key(algorithm, daemonOptions)
   end
@@ -23,16 +15,7 @@ defmodule Plowman.Keys do
   # TODO: Tratar melhor os erros do hackney
   defp checkKey(key) do
     case fingerprint(key) do
-      {:ok, cmp_key} ->
-        url     = "#{@api_host}#{@api_entry}#{cmp_key}"
-        headers = [{"Authorization", " Basic #{:base64.encode(":#{@api_key}")}"}]
-        case :hackney.request(:get, url, headers) do
-          {:ok, 200, _respHeaders, _client} ->
-            {:ok, cmp_key}
-          error ->
-            Plowman.log(error)
-            {:error, "Fingerprint #{cmp_key} not found."}
-        end
+      {:ok, cmp_key} -> Plowman.ApiServer.lookupUserByPublicKey(cmp_key)
       _ -> {:error, "Impossible calculate fingerprint"}
     end
   end

@@ -1,12 +1,6 @@
 defmodule Plowman do
   def start_link do
-    # Starting subsytems systems
-    :ok = :application.start(:crypto)
-    :ok = :application.start(:public_key)
-    :ok = :application.start(:ssl)
-    :ok = :application.start(:ssh)
-
-    Process.register(spawn(fn -> log() end), :log)
+    start_log
 
     # TODO: Adding ssh host key generation
     options = [
@@ -15,7 +9,7 @@ defmodule Plowman do
       key_cb: Plowman.Keys,
       nodelay: true,
       subsystems: [],
-      ssh_cli: {Plowman.Git_cli, []},
+      ssh_cli: {Plowman.GitCli, []},
       user_interaction: false
     ]
 
@@ -23,14 +17,22 @@ defmodule Plowman do
     {:ok, _pid} = :ssh.daemon({0, 0, 0, 0}, 3333, options)
   end
 
-  def log(msg) do
-    Process.whereis(:log) <- {:log, msg}
+  def start_log do
+    Process.register(spawn(fn -> log() end), :log)
   end
 
-  def log do
+  def log(msg) do
+    Process.whereis(:log) <- {:log, self, msg}
     receive do
-      {:log, msg} ->
+      :ok -> :ok
+    end
+  end
+
+  defp log do
+    receive do
+      {:log, pid, msg} ->
         IO.inspect(msg)
+        pid <- :ok
         log()
     end
   end

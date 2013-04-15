@@ -1,4 +1,4 @@
-defmodule Plowman.Git_cli do
+defmodule Plowman.GitCli do
   @behaviour :ssh_channel
   import Plowman, only: [log: 1]
 
@@ -25,12 +25,15 @@ defmodule Plowman.Git_cli do
     {:ok, state}
   end
 
+  # TODO: Parametrize hostname in example
   def handle_ssh_msg({:ssh_cm, cm, {:exec, channelId, wantReply, cmd}}, state) do
     case check_cmd(cmd) do
+      {:ok, app_name} ->
+        log({:app_name, app_name})
       {:error, msg} ->
         write_chars(cm, channelId, "\n ! Invalid path.")
         write_chars(cm, channelId, "\n ! Syntax is: git@heroku.com:<app>.git where <app> is your app's name.\n\n")
-        :ssh_connection.reply_equest(cm, wantReply, :failure, channelId)
+        :ssh_connection.reply_request(cm, wantReply, :failure, channelId)
     end
     {:ok, state}
   end
@@ -58,8 +61,7 @@ defmodule Plowman.Git_cli do
       [git_cmd , path] when git_cmd == "git-receive-pack" or git_cmd == "git-upload-pack" ->
         case Regex.captures(%r/#{@app_name}/g, path) do
           [app_name: app_name] when is_bitstring(app_name) ->
-            log({git_cmd, path, app_name})
-            {:ok}
+            {:ok, app_name}
           _ ->
             {:error, :invalid_path}
         end

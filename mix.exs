@@ -9,7 +9,15 @@ defmodule Plowman.Mixfile do
 
   # Configuration for the OTP application
   def application do
-    []
+    [
+      applications: [:crypto, :public_key, :ssl, :ssh, :hackney],
+      env: [
+        api_server: [
+          host: "https://mymachine.me:5000",
+          key: "ec1a8eb9-18a6-42c2-81ec-c0f0f615280c"
+        ]
+      ]
+    ]
   end
 
   # Returns the list of dependencies in the format:
@@ -17,7 +25,8 @@ defmodule Plowman.Mixfile do
   defp deps do
     [
       {:mimetypes,"1.0",[github: "spawngrid/mimetypes", tag: "1.0"]},
-      {:hackney,"0.4.0",[github: "benoitc/hackney", tag: "0.4.0"]}
+      {:hackney,"0.4.0",[github: "benoitc/hackney", tag: "0.4.0"]},
+      {:meck,"0.7.2",[github: "eproxus/meck", branch: "develop"]}
     ]
   end
 end
