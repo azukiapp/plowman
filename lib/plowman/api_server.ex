@@ -2,6 +2,7 @@ defmodule Plowman.ApiServer do
   import Plowman.Config, only: [config: 1]
   @path "/internal/lookupUserByPublicKey?fingerprint="
 
+  # TODO: Refactory to analisy hackney errors
   def lookupUserByPublicKey(key) do
     case get("#{config(:api_server)[:host]}#{@path}#{key}") do
       {:ok, 200, _, _ } -> { :ok, key }
@@ -9,6 +10,7 @@ defmodule Plowman.ApiServer do
     end
   end
 
+  # TODO: Adding timeout to request
   defp get(url) do
     :hackney.request(:get, url, headers)
   end

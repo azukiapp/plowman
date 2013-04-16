@@ -6,13 +6,10 @@ defmodule Plowman.Keys do
   def is_auth_key(key, _user, _alg, _daemonOptions) do
     case checkKey(key) do
       {:ok, _result} -> true
-      result ->
-        IO.inspect(result)
-        false
+      _ -> false
     end
   end
 
-  # TODO: Tratar melhor os erros do hackney
   defp checkKey(key) do
     case fingerprint(key) do
       {:ok, cmp_key} -> Plowman.ApiServer.lookupUserByPublicKey(cmp_key)
