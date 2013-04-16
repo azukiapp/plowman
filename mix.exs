@@ -12,6 +12,7 @@ defmodule Plowman.Mixfile do
     [
       applications: [:crypto, :public_key, :ssl, :ssh, :hackney],
       env: [
+        port: 3333,
         api_server: [
           host: "https://mymachine.me:5000",
           key: "ec1a8eb9-18a6-42c2-81ec-c0f0f615280c"

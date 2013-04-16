@@ -1,4 +1,6 @@
 defmodule Plowman do
+  import Plowman.Config, only: [config: 1]
+
   def start_link do
     start_log
 
@@ -14,7 +16,7 @@ defmodule Plowman do
     ]
 
     # Start custom ssh service
-    {:ok, _pid} = :ssh.daemon({0, 0, 0, 0}, 3333, options)
+    {:ok, _pid} = :ssh.daemon({0, 0, 0, 0}, config(:port), options)
   end
 
   def start_log do
