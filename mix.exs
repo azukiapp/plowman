@@ -25,9 +25,10 @@ defmodule Plowman.Mixfile do
   # { :foobar, "0.1", git: "https://github.com/elixir-lang/foobar.git" }
   defp deps do
     [
-      {:mimetypes,"1.0",[github: "spawngrid/mimetypes", tag: "1.0"]},
-      {:hackney,"0.4.0",[github: "benoitc/hackney", tag: "0.4.0"]},
-      {:meck,"0.7.2",[github: "eproxus/meck", branch: "develop"]}
+      {:mimetypes, "1.0"  , [github: "spawngrid/mimetypes", tag: "1.0"]},
+      {:hackney  , "0.4.0", [github: "benoitc/hackney", tag: "0.4.0"]},
+      {:meck     , "0.7.2", [github: "eproxus/meck", branch: "develop"]},
+      {:uuid     , "0.4.3", [github: "avtobiff/erlang-uuid", branch: "master"]}
     ]
   end
 end

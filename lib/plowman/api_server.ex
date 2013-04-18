@@ -6,7 +6,7 @@ defmodule Plowman.ApiServer do
   def lookupUserByPublicKey(key) do
     case get("#{config(:api_server)[:host]}#{@path}#{key}") do
       {:ok, 200, _, _ } -> { :ok, key }
-      error -> {:error, "Fingerprint #{key} not found." }
+      _ -> {:error, "Fingerprint #{key} not found." }
     end
   end
 
