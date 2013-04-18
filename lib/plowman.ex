@@ -4,7 +4,7 @@ defmodule Plowman do
   def start_link do
     # TODO: Adding ssh host key generation
     options = [
-      system_dir: '/Users/nuxlli/Downloads/egit/certs',
+      system_dir: config(:host_keys),
       auth_methods: 'publickey',
       key_cb: Plowman.Keys,
       nodelay: true,
@@ -14,7 +14,19 @@ defmodule Plowman do
     ]
 
     # Start custom ssh service
-    {:ok, _pid} = :ssh.daemon({0, 0, 0, 0}, config(:port), options)
+    :ssh.daemon(binding, config(:port), options)
+  end
+
+  # Convert biding address
+  defp binding do
+    b = config(:binding)
+    case :inet.getaddr(b, :inet) do
+      {:ok, addr} -> addr
+      {:error, _} -> case :inet.getaddr(b, :inet6) do
+        {:ok, addr} -> addr
+        {:error, _} -> {127, 0, 0, 1}
+      end
+    end
   end
 
   def log(msg) do

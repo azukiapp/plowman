@@ -1,9 +1,46 @@
 Code.require_file "../test_helper.exs", __FILE__
 
 defmodule PlowmanTest do
-  use ExUnit.Case
+  use Plowman.Test, async: false
+  import Plowman.Config, only: [config: 1]
 
-  test "plow man startable" do
-    assert {:ok, _} = Plowman.start_link()
+  test "Call :ssh.daemon with correct parameters" do
+    Mock.run :ssh, [{:stub_all, {:ok, :pid}}], fn (mock) ->
+      assert {:ok, :pid} === Plowman.start_link
+      assert 1 === mock.nc(:daemon, [
+        {0, 0, 0, 0},
+        config(:port),
+        [
+          system_dir: config(:host_keys),
+          auth_methods: 'publickey',
+          key_cb: Plowman.Keys,
+          nodelay: true,
+          subsystems: [],
+          ssh_cli: {Plowman.GitCli, []},
+          user_interaction: false
+        ]
+      ])
+    end
+  end
+
+  test "resolve correct binding address" do
+    Mock.run :ssh, [{:stub_all, {:ok, :pid}}], fn (mock) ->
+      {:ok, ip} = :inet.getaddr('localhost', :inet)
+      :application.set_env(:plowman, :binding, 'localhost')
+      assert {:ok, :pid} === Plowman.start_link
+      assert 1 === mock.nc(:daemon, [ip, config(:port), :_])
+
+      mock.reset!
+
+      {:ok, ip} = :inet.getaddr('fe80::1', :inet6)
+      :application.set_env(:plowman, :binding, 'fe80::1')
+      assert {:ok, :pid} === Plowman.start_link
+      assert 1 === mock.nc(:daemon, [ip, config(:port), :_])
+
+      mock.reset!
+      :application.set_env(:plowman, :binding, 'invalid::ip::v6')
+      assert {:ok, :pid} === Plowman.start_link
+      assert 1 === mock.nc(:daemon, [{127, 0, 0, 1}, config(:port), :_])
+    end
   end
 end
