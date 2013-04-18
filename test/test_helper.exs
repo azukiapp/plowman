@@ -13,15 +13,36 @@ defmodule Plowman.Test do
       use unquote(my).Matchers
       alias :meck, as: Meck
       alias unquote(my).Mock, as: Mock
+      require Mock
     end
   end
 
   defmodule Mock do
-    def new(name // list_to_atom('mock-#{:uuid.to_string(:uuid.uuid4())}')) do
-      unless is_module?(name), do: (defmodule name do; end)
+    defmacro run(name // nil, options // [], contents) do
+      my = __MODULE__
+      quote do
+        mock = unquote(my).new(unquote(name), unquote(options))
+        func = unquote(contents)
+        try do
+          func.(mock)
+        rescue
+          x ->
+            raise x
+        after
+          mock.destroy
+        end
+      end
+    end
+
+    def new(name // list_to_atom('mock-#{:uuid.to_string(:uuid.uuid4())}'), options // []) when is_atom(name) do
+      unless is_module?(name) do
+        (defmodule name do; end)
+      end
+
+      options = List.concat options, [:non_strict]
 
       # Meck
-      :meck.new(name, [:non_strict])
+      :meck.new(name, options)
       :meck.expect(name, :stubs, fn (fun, body) ->
           :meck.expect(name, fun, body)
       end)
@@ -35,6 +56,10 @@ defmodule Plowman.Test do
 
       :meck.expect(name, :nc, fn (fun, args) ->
         :meck.num_calls(name, fun, args)
+      end)
+
+      :meck.expect(name, :reset!, fn ->
+        :meck.reset(name)
       end)
 
       # Return module
