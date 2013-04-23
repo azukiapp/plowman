@@ -33,6 +33,10 @@ defmodule Mock do
       def stubs(func, args, return) do
         :meck.expect(@module, func, args, return)
       end
+
+      def history(pid // :_) do
+        :meck.history(@module, pid)
+      end
     end
 
     # Meck
