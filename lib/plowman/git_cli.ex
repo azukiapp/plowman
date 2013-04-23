@@ -1,6 +1,6 @@
 defmodule Plowman.GitCli do
   @behaviour :ssh_channel
-  import Plowman, only: [log: 1]
+  use Plowman
 
   defrecord State, [:channel, :cm, :group]
 

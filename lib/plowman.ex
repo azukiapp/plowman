@@ -29,7 +29,17 @@ defmodule Plowman do
     end
   end
 
-  def log(msg) do
-    IO.inspect(msg)
+  defmacro __using__(_options) do
+    my = __MODULE__
+    quote do
+      require unquote(my)
+      import unquote(my), only: [log: 1]
+    end
+  end
+
+  defmacro log(msg) do
+    quote do
+      if Mix.env == :dev, do: IO.inspect(unquote(msg))
+    end
   end
 end
