@@ -30,7 +30,8 @@ defmodule Plowman.Mixfile do
       {:mimetypes, "1.0"  , [github: "spawngrid/mimetypes", tag: "1.0"]},
       {:hackney  , "0.4.0", [github: "benoitc/hackney", tag: "0.4.0"]},
       {:meck     , "0.7.2", [github: "eproxus/meck", branch: "develop"]},
-      {:uuid     , "0.4.3", [github: "avtobiff/erlang-uuid", branch: "master"]}
+      {:uuid     , "0.4.3", [github: "avtobiff/erlang-uuid", branch: "master"]},
+      {:exjson   , "0.0.1", [github: "azukiapp/exjson", branch: "master"]}
     ]
   end
 end

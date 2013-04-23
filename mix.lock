@@ -1,4 +1,5 @@
-[ "hackney": {:git,"https://github.com/benoitc/hackney.git","64329fbeb7a9810ea48aa4ade6b72af4853f9668",[tag: "0.4.0"]},
+[ "exjson": {:git,"https://github.com/azukiapp/exjson.git","94728ab167a2f4239b1dec9549ef3768e575ebd2",[branch: "master"]},
+  "hackney": {:git,"https://github.com/benoitc/hackney.git","64329fbeb7a9810ea48aa4ade6b72af4853f9668",[tag: "0.4.0"]},
   "meck": {:git,"https://github.com/eproxus/meck.git","06a30292bb68d39c94327c73d34270b6f688a982",[branch: "develop"]},
   "mimetypes": {:git,"https://github.com/spawngrid/mimetypes.git","0800544bbb684616651a2a1b30aa260132d17d37",[tag: "1.0"]},
   "uuid": {:git,"https://github.com/avtobiff/erlang-uuid.git","f47cec9f6b737ea23e32bbe683547818ad02646c",[branch: "master"]} ]
