@@ -17,7 +17,14 @@ defmodule PlowmanGitCmdsTest do
   end
 
   test "extract app name for valid commands" do
-    assert {:ok, "app"}  === @t.run('git-receive-pack \'app.git\'')
-    assert {:ok, "node"} === @t.run('git-upload-pack \'/node.git\'')
+    Mock.run Plowman.ApiServer, fn (mock) ->
+      mock.stubs(:gitaction, [:_, :_], { :ok })
+
+      @t.run('git-receive-pack \'app.git\'')
+      assert 1 === mock.nc(:gitaction, ["app", "git-receive-pack"])
+
+      @t.run('git-upload-pack \'/node.git\'')
+      assert 1 === mock.nc(:gitaction, ["node", "git-upload-pack"])
+    end
   end
 end
