@@ -70,14 +70,13 @@ defmodule PlowmanGitCliTest do
   test "send msg and failure to connection with invalid command", meta do
     [state, connect, cmds] = [meta[:state], meta[:connect], meta[:cmds]]
 
-    cmds.stubs(:run, ['fail'], {:error, :invalid_path})
+    cmds.stubs(:run, ['fail'], {:error, :invalid_path, "msg"})
     connect.stubs(:reply_failure, [state.cm, false, state.channel, :_], :ok)
     msg = {:ssh_cm, state.cm, {:exec, state.channel, false, 'fail'}}
 
-    msg_rg = match_regex(%r/^\n ! Invalid path.*?\n.*name\.\n\n$/m)
     assert {:ok, state} == @target.handle_ssh_msg(msg, state)
     assert 1 == cmds.nc(:run, ['fail'])
-    assert 1 == connect.nc(:reply_failure, [state.cm, false, state.channel, msg_rg])
+    assert 1 == connect.nc(:reply_failure, [state.cm, false, state.channel, "\nmsg\n\n"])
   end
 
   teardown_all meta do

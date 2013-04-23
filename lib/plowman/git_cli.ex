@@ -28,11 +28,10 @@ defmodule Plowman.GitCli do
   # TODO: Parametrize hostname in example
   def handle_ssh_msg({:ssh_cm, cm, {:exec, channelId, wantReply, cmd}}, state) do
     case Plowman.GitCmds.run(cmd) do
-      {:error, _} ->
-        msg = "\n ! Invalid path."
-        msg = "#{msg}\n ! Syntax is: git@heroku.com:<app>.git where <app> is your app's name.\n\n"
-        Plowman.Connection.reply_failure(cm, wantReply, channelId, msg)
-      _ -> :ok
+      {:error, _type, msg} ->
+        Plowman.Connection.reply_failure(cm, wantReply, channelId, "\n#{msg}\n\n")
+      result ->
+        log(result)
     end
     {:ok, state}
   end

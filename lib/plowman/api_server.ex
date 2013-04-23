@@ -26,7 +26,7 @@ defmodule Plowman.ApiServer do
         {:ok, body, _} = :hackney.body(client)
         body = JSON.parse(body)
         {:ok, body["host"], body["dyno_id"]}
-      _ -> {:error, "! Unable to contact build server."}
+      _ -> {:error, :api_server, "! Unable to contact build server."}
     end
   end
 
