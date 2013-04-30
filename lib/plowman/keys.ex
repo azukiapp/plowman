@@ -1,9 +1,9 @@
 defmodule Plowman.Keys do
-  def host_key(algorithm, daemonOptions) do
-    :ssh_file.host_key(algorithm, daemonOptions)
-  end
+  @behaviour :ssh_server_key_api
 
-  def is_auth_key(key, _user, _alg, _daemonOptions) do
+  defdelegate host_key(algorithm, daemonOptions), to: :ssh_file
+
+  def is_auth_key(key, _user, _daemonOptions) do
     case checkKey(key) do
       {:ok, _result} -> true
       _ -> false

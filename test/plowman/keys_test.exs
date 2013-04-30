@@ -23,13 +23,13 @@ defmodule PlowmanKeysTest do
     fingerprint = system_fingerprint(@user_key)
 
     Meck.expect(Plowman.ApiServer, :lookupUserByPublicKey, [fingerprint], {:ok, fingerprint})
-    assert @target.is_auth_key(key, nil, nil, nil)
+    assert @target.is_auth_key(key, nil, nil)
   end
 
   test "return false to invalid fingerprint" do
     msg = "no function clause matching: :pubkey_ssh.key_type('invalid')"
     assert_raise FunctionClauseError, msg, fn ->
-      @target.is_auth_key('invalid', nil, nil, nil)
+      @target.is_auth_key('invalid', nil, nil)
     end
   end
 

@@ -60,7 +60,7 @@ child.on('exit', function(code, signal) {
   process.stdout.write(buffer.split("\n").map(function(line) {
     // Result
     var result = green + '$1 tests' + reset + ', ' + red + '$2 failures.' + reset;
-    line = line.replace(/^(.*) tests, (.*) failures.$/, result);
+    line = line.replace(/^(.*) tests, (.*) failures$/, result);
 
     // Expected
     line = line.replace(/expected: (.*)$/, 'expected: ' + green + '$1' + reset);
