@@ -4,14 +4,23 @@ defmodule PlowmanGitCliTest do
   use Plowman.Test, async: false
 
   @target Plowman.GitCli
-  @state  @target.State
+  @state  @target.CliState
 
   setup_all do
     {:ok, [
       state: @state.new(cm: 'cm', group: 'gp', channel: 'cl'),
       connect: Mock.new(Plowman.Connection),
-      cmds: Mock.new(Plowman.GitCmds)
+      cmds: Mock.new(Plowman.GitCmds),
     ]}
+  end
+
+  teardown meta do
+    meta[:cmds].reset!
+  end
+
+  teardown_all meta do
+    meta[:connect].destroy
+    meta[:cmds].destroy
   end
 
   test "set new state to init" do
@@ -57,16 +66,6 @@ defmodule PlowmanGitCliTest do
     end
   end
 
-  test "forward command to GitCmd", meta do
-    [state, cmds] = [meta[:state], meta[:cmds]]
-
-    cmds.stubs(:run, ['cmd'], :ok)
-    msg = {:ssh_cm, state.cm, {:exec, state.channel, false, 'cmd'}}
-
-    assert {:ok, state} == @target.handle_ssh_msg(msg, state)
-    assert 1 == cmds.nc(:run, ['cmd'])
-  end
-
   test "send msg and failure to connection with invalid command", meta do
     [state, connect, cmds] = [meta[:state], meta[:connect], meta[:cmds]]
 
@@ -79,8 +78,27 @@ defmodule PlowmanGitCliTest do
     assert 1 == connect.nc(:reply_failure, [state.cm, false, state.channel, "\nmsg\n\n"])
   end
 
-  teardown_all meta do
-    meta[:connect].destroy
-    meta[:cmds].destroy
+  test "connect in dynohost and authentication for valid command", meta do
+    Mock.run Plowman.GenServer, [stub_all: {:ok, :dyno}], fn(server) ->
+      [state, cmds] = [meta[:state], meta[:cmds]]
+      msg  = {:ssh_cm, state.cm, {:exec, state.channel, false, 'cmd'}}
+
+      cmds.stubs(:run, ['cmd'], {:ok, "localhost", 'authkey'})
+
+      assert {:ok, state.dyno(:dyno)} === @target.handle_ssh_msg(msg, state)
+      assert 1 == server.nc(:start_link, [Plowman.Dynohost, ["localhost", state], []])
+      assert 1 == server.nc(:cast, [:dyno, {:send, 'authkey'}])
+    end
+  end
+
+  test "forward data msgs to dynohost", meta do
+    Mock.run Plowman.GenServer, [stub_all: :ok], fn(server) ->
+      state = meta[:state]
+      msg   = {:ssh_cm, state.cm, {:data, state.channel, :type, 'foobar'}}
+      state = state.dyno(:dyno)
+
+      assert {:ok, state} === @target.handle_ssh_msg(msg, state)
+      assert 1 === server.nc(:cast, [:dyno, {:send, 'foobar'}])
+    end
   end
 end
