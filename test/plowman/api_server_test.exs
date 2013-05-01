@@ -36,7 +36,7 @@ defmodule PlowmanApiServerTest do
 
     Meck.expect(:hackney, :request, [:post, :_, :_], {:ok, 200, [], :client})
     Meck.expect(:hackney, :body, [:client], {:ok, body_json, :client})
-    assert { :ok, body[:host], body[:dyno_id] }
+    assert { :ok, body[:host], "#{@api_key}\n#{body[:dyno_id]}\n" }
       === @target.gitaction("app", "git-pack")
 
     args = [

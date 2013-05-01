@@ -10,7 +10,7 @@ defmodule Plowman.ApiServer do
   """
   def lookupUserByPublicKey(key) do
     case get(@lookup_url, [key]) do
-      {:ok, 200, _, client } ->
+      {:ok, 200, _, _client } ->
         { :ok, key }
       _ -> {:error, "Fingerprint #{key} not found." }
     end
@@ -25,7 +25,7 @@ defmodule Plowman.ApiServer do
       {:ok, 200, _, client } ->
         {:ok, body, _} = :hackney.body(client)
         body = JSON.parse(body)
-        {:ok, body["host"], body["dyno_id"]}
+        {:ok, body["host"], "#{api_key}\n#{body["dyno_id"]}\n"}
       _ -> {:error, :api_server, "! Unable to contact build server."}
     end
   end
@@ -40,7 +40,11 @@ defmodule Plowman.ApiServer do
   end
 
   defp headers do
-    key = :base64.encode(":#{config(:api_server)[:key]}")
+    key = :base64.encode(":#{api_key}")
     [{ "Authorization", " Basic #{key}" }]
+  end
+
+  defp api_key do
+    config(:api_server)[:key]
   end
 end
