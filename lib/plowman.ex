@@ -1,8 +1,21 @@
 defmodule Plowman do
+  use Application.Behaviour
+
+  require Lager
   import Plowman.Config, only: [config: 1]
 
-  def start_link do
-    # TODO: Adding ssh host key generation
+  def stop(daemon) do
+    Lager.info("Plowman stoped")
+    :ssh.stop_daemon(daemon)
+    :ok
+  end
+
+  def exit do
+    :application.stop(:plowman)
+    System.halt(0)
+  end
+
+  def start(_type, _args) do
     options = [
       system_dir: Path.expand(config(:host_keys)),
       auth_methods: 'publickey',
@@ -14,7 +27,12 @@ defmodule Plowman do
     ]
 
     # Start custom ssh service
-    :ssh.daemon(binding, config(:port), options)
+    {:ok, daemon } = :ssh.daemon(binding, config(:port), options)
+    {:ok, sup } = Plowman.Supervisor.start_link
+
+    Lager.info("Plowman will listen on #{config(:binding)}:#{config(:port)}")
+
+    {:ok, sup, daemon}
   end
 
   # Convert biding address

@@ -50,7 +50,8 @@ var format  = function(data) {
 }
 
 // Test run
-var child = spawn('mix', ['test']);
+process.env["MIX_ENV"] = "test"
+var child = spawn('mix', ['test'], { env: process.env });
 child.stdout.setEncoding('utf8');
 child.stdout.on('data', format);
 child.stderr.setEncoding('utf8');

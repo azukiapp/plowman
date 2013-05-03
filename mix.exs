@@ -1,17 +1,24 @@
+Code.require_file "../Mixfile", __FILE__
+
 defmodule Plowman.Mixfile do
   use Mix.Project
+
+  @path [
+    dev: "ebin", prod: "ebin", test: "ebin/test"
+  ]
 
   def project do
     [ app: :plowman,
       version: "0.0.1",
-      deps: deps,
-      elixirc_options: options(Mix.env) ]
+      deps: deps(Mix.env),
+      elixirc_options: options(Mix.env),
+      compile_path: @path[Mix.env]
+    ]
   end
 
   # Configuration for the OTP application
   def application do
-    [
-      applications: [:crypto, :public_key, :ssl, :ssh, :hackney, :exlager],
+    application(Mix.env) ++ [
       env: [
         binding: '0.0.0.0',
         port: 3333,
@@ -22,8 +29,22 @@ defmodule Plowman.Mixfile do
         ],
         dynohost: [
           rendezvous_port: 4000
-        ],
+        ]
       ]
+    ]
+  end
+
+  defp application(:test) do
+    [
+      applications: [:exlager]
+    ]
+  end
+
+  defp application(env) when env in [:dev, :prod] do
+    [
+      registered: [:plowman],
+      applications: [:crypto, :public_key, :ssl, :ssh, :hackney, :exlager],
+      mod: {Plowman, []},
     ]
   end
 
@@ -31,13 +52,21 @@ defmodule Plowman.Mixfile do
     [exlager_level: :debug, exlager_truncation_size: 8096]
   end
 
+  defp options(:prod) do
+    []
+  end
+
   # Returns the list of dependencies in the format:
-  # { :foobar, "0.1", git: "https://github.com/elixir-lang/foobar.git" }
-  defp deps do
+  defp deps(:test) do
+    deps(:prod) ++ [
+      {:meck     , "0.7.2", [github: "eproxus/meck", branch: "develop"]},
+    ]
+  end
+
+  defp deps(env) when env in [:dev, :prod] do
     [
       {:mimetypes, "1.0"  , [github: "spawngrid/mimetypes", tag: "1.0"]},
       {:hackney  , "0.4.0", [github: "benoitc/hackney", tag: "0.4.0"]},
-      {:meck     , "0.7.2", [github: "eproxus/meck", branch: "develop"]},
       {:uuid     , "0.4.3", [github: "avtobiff/erlang-uuid", branch: "master"]},
       {:exjson   , "0.0.1", [github: "azukiapp/exjson", branch: "master"]},
       {:exlager  , "0.2.1", [github: "khia/exlager", branch: "master"]},

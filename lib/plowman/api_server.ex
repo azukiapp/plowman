@@ -15,8 +15,7 @@ defmodule Plowman.ApiServer do
         Lager.info("User for fingerprint #{key} found")
         { :ok, key }
       _ ->
-        msg = "Fingerprint #{key} not found."
-        Lager.notice(msg)
+        Lager.notice(msg = "Fingerprint #{key} not found.")
         {:error, msg}
     end
   end

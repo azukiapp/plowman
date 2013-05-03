@@ -2,9 +2,6 @@ Code.require_file "../tools/mock.exs", __FILE__
 
 ExUnit.start
 
-:application.set_env(:plowman, :port, 6789)
-:application.stop :plowman
-
 defmodule Plowman.Test do
   defmacro __using__(opts) do
     async  = Keyword.get(opts, :async, false)
