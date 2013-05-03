@@ -14,7 +14,7 @@ defmodule Plowman.Mixfile do
       env: [
         binding: '0.0.0.0',
         port: 3333,
-        host_keys: '/Users/nuxlli/Downloads/egit/certs',
+        host_keys: './certs',
         api_server: [
           host: "https://mymachine.me:5000",
           key: "ec1a8eb9-18a6-42c2-81ec-c0f0f615280c"

@@ -5,13 +5,16 @@ defmodule PlowmanTest do
   import Plowman.Config, only: [config: 1]
 
   test "Call :ssh.daemon with correct parameters" do
+    host_keys = './test/keys'
+    :application.set_env(:plowman, :host_keys, host_keys)
+
     Mock.run :ssh, [{:stub_all, {:ok, :pid}}], fn (mock) ->
       assert {:ok, :pid} === Plowman.start_link
       assert 1 === mock.nc(:daemon, [
         {0, 0, 0, 0},
         config(:port),
         [
-          system_dir: config(:host_keys),
+          system_dir: Path.expand(host_keys),
           auth_methods: 'publickey',
           key_cb: Plowman.Keys,
           nodelay: true,
@@ -31,7 +34,6 @@ defmodule PlowmanTest do
       assert 1 === mock.nc(:daemon, [ip, config(:port), :_])
 
       mock.reset!
-
       {:ok, ip} = :inet.getaddr('fe80::1', :inet6)
       :application.set_env(:plowman, :binding, 'fe80::1')
       assert {:ok, :pid} === Plowman.start_link

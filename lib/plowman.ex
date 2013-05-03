@@ -4,7 +4,7 @@ defmodule Plowman do
   def start_link do
     # TODO: Adding ssh host key generation
     options = [
-      system_dir: config(:host_keys),
+      system_dir: Path.expand(config(:host_keys)),
       auth_methods: 'publickey',
       key_cb: Plowman.Keys,
       nodelay: true,

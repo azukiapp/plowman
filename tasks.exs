@@ -1,0 +1,35 @@
+#!/usr/bin/env elixir
+
+defmodule Mix.Tasks.Certs do
+  use Mix.Task
+
+  @moduledoc """
+    Generating public/private rsa host key pair.
+  """
+  def run(argv) do
+    {opts, _} = OptionParser.parse(argv, aliases: [c: :certs, o: :overwrite])
+
+    path = Path.join(Path.dirname(__FILE__), "certs")
+    path = Path.expand(Keyword.get(opts, :certs, path))
+    private = Path.join(path, "ssh_host_rsa_key")
+
+    overwrite = "yes"
+
+    if File.exists?(private) and !Keyword.get(opts, :overwrite, false) do
+      overwrite = IO.gets("Private key exists (#{private}), overwrite? (y/n): ")
+      overwrite = String.strip("#{overwrite}")
+    end
+
+    if overwrite in ["yes", "y"] do
+      if File.exists?(private) do
+        File.rm(private)
+        File.rm("#{private}.pub")
+      end
+      cmd = 'ssh-keygen -t rsa -f #{private} -N ""'
+      IO.puts("#{:os.cmd(cmd)}")
+    end
+  end
+end
+
+Mix.start
+Mix.CLI.run
