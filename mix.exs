@@ -4,13 +4,14 @@ defmodule Plowman.Mixfile do
   def project do
     [ app: :plowman,
       version: "0.0.1",
-      deps: deps ]
+      deps: deps,
+      elixirc_options: options(Mix.env) ]
   end
 
   # Configuration for the OTP application
   def application do
     [
-      applications: [:crypto, :public_key, :ssl, :ssh, :hackney, :lager],
+      applications: [:crypto, :public_key, :ssl, :ssh, :hackney, :exlager],
       env: [
         binding: '0.0.0.0',
         port: 3333,
@@ -26,6 +27,10 @@ defmodule Plowman.Mixfile do
     ]
   end
 
+  defp options(env) when env in [:dev, :test] do
+    [exlager_level: :debug, exlager_truncation_size: 8096]
+  end
+
   # Returns the list of dependencies in the format:
   # { :foobar, "0.1", git: "https://github.com/elixir-lang/foobar.git" }
   defp deps do
@@ -35,8 +40,8 @@ defmodule Plowman.Mixfile do
       {:meck     , "0.7.2", [github: "eproxus/meck", branch: "develop"]},
       {:uuid     , "0.4.3", [github: "avtobiff/erlang-uuid", branch: "master"]},
       {:exjson   , "0.0.1", [github: "azukiapp/exjson", branch: "master"]},
+      {:exlager  , "0.2.1", [github: "khia/exlager", branch: "master"]},
       {:goldrush , "0.1.0", [github: "DeadZen/goldrush", tag: "7ff9b03"]},
-      {:lager    , "2.0.0", [github: "basho/lager", tag: "2.0.0rc2"]}
     ]
   end
 end

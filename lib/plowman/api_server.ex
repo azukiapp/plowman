@@ -1,4 +1,5 @@
 defmodule Plowman.ApiServer do
+  require Lager
   import Plowman.Config, only: [config: 1]
 
   @lookup_url    "/internal/lookupUserByPublicKey?fingerprint=~s"
@@ -11,8 +12,12 @@ defmodule Plowman.ApiServer do
   def lookupUserByPublicKey(key) do
     case get(@lookup_url, [key]) do
       {:ok, 200, _, _client } ->
+        Lager.info("User for fingerprint #{key} found")
         { :ok, key }
-      _ -> {:error, "Fingerprint #{key} not found." }
+      _ ->
+        msg = "Fingerprint #{key} not found."
+        Lager.notice(msg)
+        {:error, msg}
     end
   end
 
@@ -26,7 +31,9 @@ defmodule Plowman.ApiServer do
         {:ok, body, _} = :hackney.body(client)
         body = JSON.parse(body)
         {:ok, body["host"], "#{api_key}\n#{body["dyno_id"]}\n"}
-      _ -> {:error, :api_server, "! Unable to contact build server."}
+      _ ->
+        Lager.error(msg = "! Unable to contact build server.")
+        {:error, :api_server, msg}
     end
   end
 

@@ -40,7 +40,7 @@ defmodule PlowmanGitCmdsTest do
   test "return error from apiserver" do
     Mock.run :hackney, fn (mock) ->
       mock.stubs(:request, [:post, :_, :_], {:error, 400})
-      assert Plowman.ApiServer.gitaction('app', 'git-receive-pack')
+      silence_log do: assert Plowman.ApiServer.gitaction('app', 'git-receive-pack')
         === @t.run('git-receive-pack \'app.git\'')
     end
   end

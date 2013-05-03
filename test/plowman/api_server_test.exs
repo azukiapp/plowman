@@ -12,7 +12,7 @@ defmodule PlowmanApiServerTest do
 
   test "get user by public key" do
     Meck.expect(:hackney, :request, [:get, :_, :_], {:ok, 200, [], [] })
-    assert @target.lookupUserByPublicKey('key') === {:ok, 'key' }
+    silence_log do: assert @target.lookupUserByPublicKey('key') === {:ok, 'key' }
 
     args = [
       :get,
@@ -25,7 +25,7 @@ defmodule PlowmanApiServerTest do
   test "handle the error to a user not found" do
     url_err = match_regex(%r/.*\?fingerprint=invalid_key$/)
     Meck.expect(:hackney, :request, [:get, url_err, :_], {:error})
-    assert @target.lookupUserByPublicKey('invalid_key') === {
+    silence_log do: assert @target.lookupUserByPublicKey('invalid_key') === {
       :error, "Fingerprint invalid_key not found."
     }
   end

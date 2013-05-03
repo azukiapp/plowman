@@ -1,6 +1,5 @@
 defmodule Plowman.GitCli do
   @behaviour :ssh_channel
-  use Plowman
 
   alias Plowman.Connection, as: Connection
   alias Plowman.GitCmds, as: GitCmds
@@ -26,7 +25,6 @@ defmodule Plowman.GitCli do
   end
 
   def handle_msg(_data, state) do
-    log(_data)
     {:ok, state}
   end
 
