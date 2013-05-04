@@ -6,13 +6,16 @@ __FILE__="${0}"
 export PLOWMAN_ROOT=`cd \`dirname $(readlink ${__FILE__} || echo ${__FILE__} )\`/..; pwd`
 cd $PLOWMAN_ROOT
 
-export REBAR="./rebar --config rebar.conf"
-
-if [ ! -f "${PLOWMAN_ROOT}/deps/elixir/bin/elixir" ]; then
-  $REBAR get-deps
-  $REBAR compile
-fi
-
 export PATH="${PLOWMAN_ROOT}/deps/elixir/bin:$PATH"
 
-elixir --no-halt -S mix
+if ! which elixir 2> /dev/null > /dev/null; then
+  echo "Elixir not found."
+  echo "Try: make or install from (http://elixir-lang.org)."
+  exit 1
+fi
+
+if [[ -z ${@} ]]; then
+  elixir --no-halt -S mix
+else
+  $@
+fi
