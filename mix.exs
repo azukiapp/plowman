@@ -63,7 +63,7 @@ defmodule Plowman.Mixfile do
     [
       {:mimetypes, "1.0"  , [github: "spawngrid/mimetypes", tag: "1.0"]},
       {:hackney  , "0.4.0", [github: "benoitc/hackney", tag: "0.4.0"]},
-      {:uuid     , "0.4.3", [github: "avtobiff/erlang-uuid", branch: "master"]},
+      {:uuid     , "0.4.4", [github: "avtobiff/erlang-uuid", tag: "v0.4.4"]},
       {:exjson   , "0.0.1", [github: "azukiapp/exjson", branch: "master"]},
       {:exlager  , "0.2.1", [github: "khia/exlager", branch: "master"]},
       {:goldrush , "0.1.0", [github: "DeadZen/goldrush", tag: "7ff9b03"]},

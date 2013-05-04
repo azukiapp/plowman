@@ -1,5 +1,6 @@
 # Plowman - SSH-to-Git Server for Openruko
 
+[![Build Status](https://travis-ci.org/azukiapp/plowman.png?branch=master)](https://travis-ci.org/azukiapp/plowman)
 This is a alternative port of [gitmouth](https://github.com/openruko/gitmouth) written in [Elixir](http://elixir-lang.org)
 
 # Introduction
