@@ -3,8 +3,8 @@ Code.require_file "../../test_helper.exs", __FILE__
 defmodule PlowmanApiServerTest do
   use Plowman.Test, target: Plowman.ApiServer, async: true
 
-  @api_host Plowman.Config.config(:api_server)[:host]
-  @api_key  Plowman.Config.config(:api_server)[:key]
+  @api_host Plowman.Config.config(:api_server_host)
+  @api_key  Plowman.Config.config(:api_server_key)
 
   setup_all do
     Meck.new(:hackney)

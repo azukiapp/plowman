@@ -34,7 +34,7 @@ defmodule PlowmanDynohostTest do
   end
 
   test "spawn a process, connect to dynohost and start receive", meta do
-    port   = config(:dynohost)[:rendezvous_port]
+    port   = config(:dynohost_rendezvous_port)
     client = CliState.new()
     state  = @target.SslState.new(client: client, socket: :socket)
 

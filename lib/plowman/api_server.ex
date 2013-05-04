@@ -1,6 +1,6 @@
 defmodule Plowman.ApiServer do
   require Lager
-  import Plowman.Config, only: [config: 1]
+  import Plowman.Config, only: [config: 2]
 
   @lookup_url    "/internal/lookupUserByPublicKey?fingerprint=~s"
   @gitaction_url "/internal/~s/gitaction?command=~s"
@@ -41,7 +41,8 @@ defmodule Plowman.ApiServer do
   defp post(url, options), do: request(:post, url, options)
 
   defp request(method, url, options) do
-    url  = "#{config(:api_server)[:host]}#{:io_lib.format(url, options)}"
+    host = config(:api_server_host, :APISERVER_HOST)
+    url  = "#{host}#{:io_lib.format(url, options)}"
     :hackney.request(method, url, headers)
   end
 
@@ -51,6 +52,6 @@ defmodule Plowman.ApiServer do
   end
 
   defp api_key do
-    config(:api_server)[:key]
+    config(:api_server_key, :APISERVER_KEY)
   end
 end

@@ -1,5 +1,5 @@
 defmodule Plowman.Dynohost do
-  import Plowman.Config, only: [config: 1]
+  import Plowman.Config, only: [config: 3]
   alias Plowman.GitCli.CliState, as: CliState
   alias Plowman.Connection, as: Connection
   alias Plowman.GenServer, as: PlowmanGenServer
@@ -24,7 +24,7 @@ defmodule Plowman.Dynohost do
 
   ## callback functions
   def init([host, client]) do
-    port = config(:dynohost)[:rendezvous_port]
+    port = config(:dynohost_rendezvous_port, :DYNOHOST_PORT, true)
     {:ok, socket} = :ssl.connect('#{host}', port, [])
     state = SslState.new(socket: socket, client: client)
 

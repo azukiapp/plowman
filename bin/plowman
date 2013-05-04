@@ -15,7 +15,7 @@ if ! which elixir 2> /dev/null > /dev/null; then
 fi
 
 if [[ -z ${@} ]]; then
-  elixir --no-halt -S mix
+  elixir --no-halt -S mix run
 else
   $@
 fi

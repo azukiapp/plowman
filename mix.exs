@@ -23,13 +23,9 @@ defmodule Plowman.Mixfile do
         binding: '0.0.0.0',
         port: 3333,
         host_keys: './certs',
-        api_server: [
-          host: "https://mymachine.me:5000",
-          key: "ec1a8eb9-18a6-42c2-81ec-c0f0f615280c"
-        ],
-        dynohost: [
-          rendezvous_port: 4000
-        ]
+        api_server_host: "https://mymachine.me:5000",
+        api_server_key: "ec1a8eb9-18a6-42c2-81ec-c0f0f615280c",
+        dynohost_rendezvous_port: 4000
       ]
     ]
   end
