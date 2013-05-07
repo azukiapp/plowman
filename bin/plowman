@@ -14,7 +14,7 @@ if ! which elixir 2> /dev/null > /dev/null; then
   exit 1
 fi
 
-if [[ -z ${@} ]]; then
+if [ -z "$@" ]; then
   elixir --no-halt -S mix run
 else
   $@
