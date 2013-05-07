@@ -14,6 +14,10 @@ defmodule Mix.Tasks.Certs do
     path = Path.expand(Keyword.get(opts, :certs, path))
     private = Path.join(path, "ssh_host_rsa_key")
 
+    if !File.dir?(path) do
+      File.mkdir(path)
+    end
+
     if File.exists?(private) and !Keyword.get(opts, :overwrite, false) do
       overwrite = IO.gets("Private key exists (#{private}), overwrite? (y/n): ")
       overwrite = String.strip("#{overwrite}")
