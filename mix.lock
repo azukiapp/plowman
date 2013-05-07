@@ -1,8 +1,8 @@
-[ "exjson": {:git,"https://github.com/azukiapp/exjson.git","94728ab167a2f4239b1dec9549ef3768e575ebd2",[branch: "master"]},
+[ "exjson": {:git,"https://github.com/azukiapp/exjson.git","6021434570092b5e31ff379b17a12abb47e7a45c",[branch: "master"]},
   "exlager": {:git,"https://github.com/khia/exlager.git","f8dd0715d7668290d7d02a4517acfee4e8be885c",[branch: "master"]},
   "goldrush": {:git,"https://github.com/DeadZen/goldrush.git","7ff9b03e4038e83732b241d92ccee2322c4ece5e",[tag: "7ff9b03"]},
   "hackney": {:git,"https://github.com/benoitc/hackney.git","64329fbeb7a9810ea48aa4ade6b72af4853f9668",[tag: "0.4.0"]},
-  "lager": {:git,"https://github.com/basho/lager.git","1b910c8f8d126cc0a56403dc926d151ecb2fdc53",[]},
+  "lager": {:git,"https://github.com/basho/lager.git","169cffd94759e99e2e8870b125861a91e3c1482a",[]},
   "meck": {:git,"https://github.com/eproxus/meck.git","4b085043972dee845fc3dd6f3a1926df4e39ed3d",[branch: "develop"]},
   "mimetypes": {:git,"https://github.com/spawngrid/mimetypes.git","0800544bbb684616651a2a1b30aa260132d17d37",[tag: "1.0"]},
   "uuid": {:git,"https://github.com/avtobiff/erlang-uuid.git","d7f64acd8412b79e854b8c95f4c66d8e071de8d9",[tag: "v0.4.4"]} ]

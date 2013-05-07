@@ -6,7 +6,7 @@ __FILE__="${0}"
 export PLOWMAN_ROOT=`cd \`dirname $(readlink ${__FILE__} || echo ${__FILE__} )\`/..; pwd`
 cd $PLOWMAN_ROOT
 
-export PATH="${PLOWMAN_ROOT}/deps/elixir/bin:$PATH"
+export PATH="${PLOWMAN_ROOT}/bin:${PLOWMAN_ROOT}/deps/elixir/bin:$PATH"
 
 if ! which elixir 2> /dev/null > /dev/null; then
   echo "Elixir not found."
@@ -14,7 +14,7 @@ if ! which elixir 2> /dev/null > /dev/null; then
   exit 1
 fi
 
-if [ -z "$@" ]; then
+if [ -z $1 ]; then
   elixir --no-halt -S mix run
 else
   $@
