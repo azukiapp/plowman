@@ -1,6 +1,7 @@
 Code.require_file "../tools/mock.exs", __FILE__
+Code.require_file "../tools/pride_formatter.exs", __FILE__
 
-ExUnit.start
+ExUnit.start formatter: PrideFormatter
 
 defmodule Plowman.Test do
   defmacro __using__(opts) do
