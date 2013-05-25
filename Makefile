@@ -18,9 +18,11 @@ mix: deps/elixir/ebin/elixir.app
 
 deps-test: mix
 	@MIX_ENV=test mix deps.get | $(silence_compiled)
+	@MIX_ENV=test mix deps.compile | $(silence_compiled)
 
 deps: mix
 	@mix deps.get | $(silence_compiled)
+	@mix deps.compile | $(silence_compiled)
 
 ebin/plowman.app: deps
 	@echo "\x1b[1;32mCompile plowman...\x1b[0m"
