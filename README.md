@@ -26,6 +26,14 @@ $ make # If not have elixir install this in deps/elixir
 $ make certs
 ```
 
+If you receive `terminated with reason: {'module could not be loaded',[{'Elixir-JSON',parse` error, try this:
+
+```bash
+$ cd deps/exjson
+$ PATH=../elixir/bin make clean
+$ PATH=../elixir/bin make
+```
+
 # Environment Variables
 
 `plowman` will check for the presence of several environment variables, these must be configured as part of the process start.
