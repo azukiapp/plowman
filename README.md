@@ -50,3 +50,7 @@ $ PATH=../elixir/bin make
 # License
 
 plwoman are licensed under MIT. http://opensource.org/licenses/mit-license.php
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/azukiapp/plowman/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
